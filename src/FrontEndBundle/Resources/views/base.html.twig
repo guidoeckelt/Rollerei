@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="{% block description %}Rollerei Brettliebe{% endblock %}">
+    <title>{% block title %}Base Title{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/css/rollereiBase.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/css/util.css') }}" />
+    {# Image Extensions#}<style>
+        .background{
+
+            background: rgb(119, 119, 119) url('{{ asset('bundles/frontend/img/background.png') }}') no-repeat center top;
+            background-size:		90% 110%;
+            padding:				6% 4% 0 7%;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}
+</head>
+<body class="scrollable">
+<div class="background">
+    <div class="root scrollable">
+        <header class="header row center">{% block headerContent %}{% endblock %}</header>
+        <main class="main">
+        {% block mainContent %}
+            <h1>Base Content</h1>
+        {% endblock %}
+        </main>
+        <footer class="footer">{% block footerContent %}{% endblock %}</footer>
+    </div>
+</div>
+</body>
+</html>

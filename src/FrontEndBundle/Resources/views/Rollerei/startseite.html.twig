@@ -1,0 +1,201 @@
+{% extends('FrontEndBundle::base.html.twig') %}
+
+{% block title %}Rollerei Brettliebe{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ asset('bundles/frontend/css/menu.css') }}"/>
+<style>
+/*=================Startseite-Rollerei======================
+=============================================*/
+/*				PICTURE					*/
+.holybrettliebe{
+    width: 					auto;
+    height : 				auto;
+    object-fit: 			contain;
+}
+/*					CONTENTCONTAINER			*/
+.contentcontainerbackground{
+    width:					100%;
+    flex-grow: 				1;
+
+    background:				url('{{ asset('bundles/frontend/img/contentbox/contentbox.png') }}') center no-repeat;
+    background-size: 		100% 100%;
+
+}
+.contentcontainer{
+    margin:					2em 3em;
+    display:				flex;
+    flex-flow:				column nowrap;
+    justify-content:		flex-start;
+    align-items:			center;
+}
+
+/*					DATEBOX			*/
+.dateboxbackground{
+    width:					90%;
+    height:					10em;
+    max-width:				55em;
+
+    background:				url('{{ asset('bundles/frontend/img/contentbox/datebox.png') }}') center no-repeat;
+    background-size: 		100% 100%;
+
+    padding: 				1.5em 2em;
+}
+.datebox{
+    height: 				100%;
+
+    display:				flex;
+    flex-flow:				row nowrap;
+    justify-content:		center;
+    align-items:			center;
+}
+.dateItem{
+    width: 					11%;
+    height:					90%;
+    padding:				0 0 6% 0;
+}
+.dateSeparator{
+    width:					3%;
+    height:					10%;
+    align-self:				flex-end;
+    margin-bottom:			13%;
+}
+
+/*					CONTENTBOX			*/
+.contentboxbackground{
+    width:					100%;
+
+    background:				url('{{ asset('bundles/frontend/img/contentbox/videobox.png') }}') center no-repeat;
+    background-size: 		100% 100%;
+
+    margin:					0 2%;
+}
+.contentbox{
+
+    display:				flex;
+    flex-flow:				column nowrap;
+    justify-content:		center;
+}
+#videoTitel{
+    font-family: 			sans-serif;
+    font-style: 			normal;
+    font-variant: 			normal;
+    font-weight: 			600;
+    font-size: 				200%;
+    line-height: 			normal;
+
+    margin:					1em 0 1em 0;
+    text-align:				center;
+}
+#ytapiplayerContainer{
+    height:					84%;
+
+    display:				flex;
+    flex-flow:				column nowrap;
+    justify-content:		flex-start;
+    align-items:			center;
+    padding:				0 5%;
+}
+#ytapiplayer{
+    width:					100%;
+    margin:					2%;
+}
+.buttonContainer{
+    height:					16%;
+
+    display:				flex;
+    flex-flow:				row nowrap;
+    justify-content:		flex-start;
+    align-items:			flex-start;
+    padding:				0 5%;
+}
+.button{
+    width:					21%;
+    height:					5em;
+    cursor:					pointer;
+}
+.button:first-child{
+    margin-right:			30%;
+}
+.button:last-child{
+    margin-left:			30%;
+}
+.button:hover{
+    filter:					drop-shadow(0.125em 0.125em #ff0);
+}
+.button .button-img{
+    width: 					100%;
+}
+</style>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://www.youtube.com/iframe_api" async></script>
+<script src="{{ asset('bundles/frontend/js/date.js') }}"></script>
+<script src="{{ asset('bundles/frontend/js/YoutubeVideoController.js') }}"></script>
+<script src="{{ asset('bundles/frontend/js/startseite.js') }}"></script>
+{% endblock %}
+{% block headerContent %}
+<img class="holybrettliebe" src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}"/>
+<div class="menu row">
+    <div class="menuitem">
+        <a class="menuitem-link row center" href="{{ path('rollerei.videos') }}">
+            <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/rollerei-videos.png') }}" alt="Rollerei-Videos-Bild"/>
+        </a>
+    </div>
+    <div class="separator"></div>
+    <div class="menuitem">
+        <a class="menuitem-link row center" href="{{ path('rollerei.stuff') }}">
+            <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/stuff.png') }}" alt="Stuff-Bild"/>
+        </a>
+    </div>
+    <div class="separator"></div>
+    <div class="menuitem">
+        <a class="menuitem-link row center" href="{{ path('rollerei.photos') }}">
+            <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/brettliebe-photos.png') }}" alt="Brettliebe-Photos-Bild"/>
+        </a>
+    </div>
+</div>
+{% endblock %}
+{% block mainContent %}
+    {% for video in videos %}
+    <p>{{ video.name }}  {{ video.url }}</p>
+    {% endfor %}
+    <div class="contentcontainerbackground">
+        <div class="contentcontainer">
+
+            <div class="dateboxbackground">
+                <div class="datebox">
+                    <img id="d1" class="dateItem"/>
+                    <img id="d2" class="dateItem"/>
+                    <img class="dateSeparator" src="{{ asset('bundles/frontend/img/punkt.png') }}" alt="punkt"/>
+                    <img id="m1" class="dateItem"/>
+                    <img id="m2" class="dateItem"/>
+                    <img class="dateSeparator" src="{{ asset('bundles/frontend/img/punkt.png') }}" alt="punkt"/>
+                    <img id="y1" class="dateItem"/>
+                    <img id="y2" class="dateItem"/>
+                    <img id="y3" class="dateItem"/>
+                    <img id="y4" class="dateItem"/>
+                </div>
+            </div>
+            <div class="contentboxbackground">
+                <div class="contentbox">
+                    <label id="videoTitel"></label>
+                    <div id="ytapiplayerContainer">
+                        <div id="ytapiplayer"></div>
+                    </div>
+                    <div class="buttonContainer">
+                        <div id="btnNext" class="button">
+                        <img class="button-img" src="{{ asset('bundles/frontend/img/contentbox/nextbutton.png') }}" alt="next"/>
+                        </div>
+                        <div id="btnBack" class="button">
+                        <img class="button-img" src="{{ asset('bundles/frontend/img/contentbox/backbutton.png') }}" alt="back"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="admin-link">
+        <a class="link" href="{{ path('admin.startseite') }}">Admin</a>
+    </div>
+{% endblock %}

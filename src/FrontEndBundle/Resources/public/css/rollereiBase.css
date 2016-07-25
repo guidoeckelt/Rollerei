@@ -1,0 +1,34 @@
+*{
+    padding: 				0;
+    margin: 				0;
+    overflow:				hidden;
+}
+body{
+    margin: 				0;
+    height:					100%;
+    height:					100vh;
+}
+.root{
+    width:					100%;
+
+    overflow-y:				auto;
+    display:				flex;
+    flex-flow:				column nowrap;
+    align-items:			center;
+
+}
+.header{
+    width:                  100%;
+}
+.main{
+    width:                  100%;
+
+    display:				flex;
+    flex-flow:				column nowrap;
+    justify-content:        center;
+    align-items:			center;
+
+}
+.footer{
+    width:                  100%;
+}
