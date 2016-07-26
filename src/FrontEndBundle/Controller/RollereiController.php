@@ -14,10 +14,7 @@ class RollereiController extends Controller
      */
     public function startseiteAction()
     {
-        $videoService = $this->get('backend.video');
-
-        $videos = $videoService->findAllVideos();
-        return array('videos'=>$videos);
+        return array();
     }
 
     /**
@@ -41,7 +38,7 @@ class RollereiController extends Controller
 
 
     /**
-     * @Route("/RollereiVideos", name="rollerei.photos")
+     * @Route("/RollereiPhotos", name="rollerei.photos")
      * @Template()
      */
     public  function brettliebePhotosAction()

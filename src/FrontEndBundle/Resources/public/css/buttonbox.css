@@ -1,0 +1,26 @@
+.buttonContainer{
+    height:					16%;
+
+    display:				flex;
+    flex-flow:				row nowrap;
+    justify-content:		flex-start;
+    align-items:			flex-start;
+    padding:				0 5%;
+}
+.button{
+    width:					21%;
+    height:					5em;
+    cursor:					pointer;
+}
+.button:first-child{
+    margin-right:			30%;
+}
+.button:last-child{
+    margin-left:			30%;
+}
+.button:hover{
+    filter:					drop-shadow(0.125em 0.125em #ff0);
+}
+.button .button-img{
+    width: 					100%;
+}

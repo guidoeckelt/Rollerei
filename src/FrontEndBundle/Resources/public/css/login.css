@@ -1,0 +1,32 @@
+.login-container{
+    position:               absolute;
+    top:                    0;
+    right:                  0;
+
+    align-items:            flex-end;
+}
+.login{
+    background:             #0088CC;
+}
+.login-titel{
+    cursor:                 pointer;
+
+    transition:             all 2s linear;
+
+    padding:                0 10px 0 5px;
+}
+.login-form{
+    display:                none;
+    padding:                0 10px 10px 10px;
+}
+.login-form > *{
+    margin:                 10px 0 0 0;
+    height:                 30px;
+}
+.login-input{
+    border:                 2px solid gray;
+}
+.login-btn{
+    cursor:                 pointer;
+    width:                 100%;
+}

@@ -1,0 +1,19 @@
+.datebox{
+    height: 				100%;
+
+    display:				flex;
+    flex-flow:				row nowrap;
+    justify-content:		center;
+    align-items:			center;
+}
+.dateItem{
+    width: 					11%;
+    height:					90%;
+    padding:				0 0 6% 0;
+}
+.dateSeparator{
+    width:					3%;
+    height:					10%;
+    align-self:				flex-end;
+    margin-bottom:			13%;
+}

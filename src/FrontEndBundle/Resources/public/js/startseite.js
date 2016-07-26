@@ -81,4 +81,14 @@ $(function(){
     $("#btnBack").click(function(){
         rollerei.loadPreviousVideo();
     });
+    $('.login-titel').click(function(event){
+        var loginForm = $('.login-form');
+        var bool = loginForm.is(':hidden');
+        if(bool == true){
+            loginForm.css('display','flex');
+
+        }else{
+            loginForm.css('display','none');
+        }
+    });
 });
