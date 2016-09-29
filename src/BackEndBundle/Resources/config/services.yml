@@ -2,7 +2,7 @@ services:
 # BackEnd::VideoService
   backend.video:
     class:  BackEndBundle\Service\VideoService
-    arguments: ["@doctrine.orm.default_entity_manager"]
+    arguments: ["@doctrine.orm.default_entity_manager","@validator"]
 # BackEnd::EventService
   backend.event:
     class:  BackEndBundle\Service\EventService
@@ -10,6 +10,11 @@ services:
 # BackEnd::AdminService
   backend.admin:
     class:  BackEndBundle\Service\AdminService
+    arguments: ['@doctrine.orm.default_entity_manager']
+
+# BackEnd::PLatformService
+  backend.platform:
+    class:  BackEndBundle\Service\PlatformService
     arguments: ['@doctrine.orm.default_entity_manager']
 
 #    back_end.example:

@@ -67,7 +67,7 @@ function Video(id, titel, datum){
     this.id = id;
     this.titel = titel;
     this.datum = datum;
-    this.URL = "https://www.youtube.com/watch?v="+this.id
+    this.URL = "https://www.youtube.com/watch?v="+this.id;
 
     this.PLATFORM = {Youtube:"Youtube",Vimeo:"Vimeo"}
 

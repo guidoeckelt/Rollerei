@@ -10,6 +10,7 @@ namespace BackEndBundle\Service;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 class AdminService
 {
@@ -26,5 +27,29 @@ class AdminService
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+    }
+
+    /**
+     * @param string $name
+     * @param string $password
+     *
+     * @return string
+     */
+    public function checkLoginData($name,$password)
+    {
+        $role = null;
+        $criteria = array('name'=>$name,'password'=>$password);
+        try{
+            $user = $this->em->getRepository('BackEndBundle:Admin')->findOneBy($criteria);
+            if($user != null){
+                if($user->isSuper()){
+                    return 'super';
+                }
+                return 'admin';
+            }
+        }catch (NonUniqueResultException $e){
+            return 'fehler';
+        }
+        return 'unknown';
     }
 }

@@ -4,29 +4,32 @@
     <meta name="description" content="{% block description %}Rollerei Brettliebe Admin{% endblock %}">
     <title>{% block title %}Admin Base Title{% endblock %}</title>
 
-    <link rel="stylesheet" href="{{ asset('bundles/frontend/css/rollereiBase.css') }}" />
-    {# Image Extensions#}<style>
-        .background{
-            height:					100%;
-
-            background: rgb(119, 119, 119) url('{{ asset('bundles/frontend/img/background.png') }}') no-repeat center;
-            background-size:		contain;
-
-            padding:				6% 4% 10% 7%;
-        }
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/css/admin/base.css') }}" />
+    {# Image Extensions#}
+    <style type="text/css">
     </style>
+    {% block styles %}{% endblock %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
-    {% block scripts %}
-    {% endblock %}
-    {% block styles %}
-    {% endblock %}
+    <script src="{{ asset('bundles/frontend/js/HTTP.js') }}"></script>
+    {% block scripts %}{% endblock %}
 </head>
 <body>
-<div class="background">
     <div class="root">
-        <header class="header">{% block headerContent %}{% endblock %}</header>
+        <header class="header">
+            <a class="logo-link" href="{{ path('admin.startseite') }}">
+                <img  class="logo"
+                      src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}" alt="Rollerei Logo"/>
+            </a>
+            <div class="mid-box">
+                {% block headerContent %}{% endblock %}
+            </div>
+            <div class="links">
+                <a class="link" href="{{ path('admin.video') }}">Videos</a>
+                <a class="link" href="{{ path('admin.photo') }}">Fotos</a>
+            </div>
+        </header>
         <main class="main">
             {% block mainContent %}
                 <h1>Base Content</h1>
@@ -34,6 +37,5 @@
         </main>
         <footer class="footer">{% block footerContent %}{% endblock %}</footer>
     </div>
-</div>
 </body>
 </html>

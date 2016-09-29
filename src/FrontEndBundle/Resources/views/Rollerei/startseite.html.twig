@@ -90,24 +90,37 @@
 <script src="{{ asset('bundles/frontend/js/date.js') }}"></script>
 <script src="{{ asset('bundles/frontend/js/YoutubeVideoController.js') }}"></script>
 <script src="{{ asset('bundles/frontend/js/startseite.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $('.login-btn').click(function (event) {
+            var params = $('.login-form').serialize();
+            $.post('{{ path('admin.login') }}',params,function (response) {
+                if(response[0] == 's'||response[0] == 'a'){
+                    window.open('{{ path('admin.startseite') }}','_self');
+                }
+            });
+            event.preventDefault();
+        });
+    })
+</script>
 {% endblock %}
 {% block headerContent %}
 <img class="holybrettliebe" src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}"/>
 <div class="menu row">
     <div class="menuitem">
-        <a class="menuitem-link row center" href="{{ path('rollerei.videos') }}">
+        <a class="menuitem-link" href="{{ path('rollerei.videos') }}">
             <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/rollerei-videos.png') }}" alt="Rollerei-Videos-Bild"/>
         </a>
     </div>
     <div class="separator"></div>
     <div class="menuitem">
-        <a class="menuitem-link row center" href="{{ path('rollerei.stuff') }}">
+        <a class="menuitem-link" href="{{ path('rollerei.stuff') }}">
             <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/stuff.png') }}" alt="Stuff-Bild"/>
         </a>
     </div>
     <div class="separator"></div>
     <div class="menuitem">
-        <a class="menuitem-link row center" href="{{ path('rollerei.photos') }}">
+        <a class="menuitem-link" href="{{ path('rollerei.photos') }}">
             <img class="menuitem-link-icon" src="{{ asset('bundles/frontend/img/menu/brettliebe-photos.png') }}" alt="Brettliebe-Photos-Bild"/>
         </a>
     </div>

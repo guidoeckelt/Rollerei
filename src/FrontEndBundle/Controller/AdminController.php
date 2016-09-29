@@ -22,15 +22,34 @@ class AdminController extends Controller
 {
     /**
      * @Route("/admin/",name="admin.startseite")
-     * @Template()
+     *
      */
     public function startseiteAction()
+    {
+        return $this->redirectToRoute('admin.video');
+    }
+
+
+    /**
+     * @Route("/admin/video",name="admin.video")
+     * @Template()
+     */
+    public function showVideosAction()
     {
         return array();
     }
 
     /**
-     * @Route("/admin/video/form",name="admin.video-form")
+     * @Route("/admin/photo",name="admin.photo")
+     * @Template()
+     */
+    public function showPhotosAction()
+    {
+        return array();
+    }
+
+    /**
+     * @Route("/admin/video/create",name="admin.video.create")
      * @Template()
      *
      * @param Request $request

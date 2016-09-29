@@ -11,6 +11,7 @@ namespace BackEndBundle\Service;
 
 use BackEndBundle\Entity\Video;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class VideoService
 {
@@ -20,12 +21,19 @@ class VideoService
     private $em;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * VideoService constructor.
      * @param EntityManagerInterface $em
+     * @param ValidatorInterface $validator
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct($em,$validator)
     {
         $this->em = $em;
+        $this->validator = $validator;
     }
 
     /**
@@ -41,5 +49,12 @@ class VideoService
     public function create($video)
     {
         $this->em->persist($video);
+        $this->em->flush();
+    }
+
+    public function validate(Video $video)
+    {
+        $validationConstraints = $this->validator->validate($video);
+        return $validationConstraints;
     }
 }

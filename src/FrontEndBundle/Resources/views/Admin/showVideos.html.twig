@@ -1,0 +1,287 @@
+{% extends('@FrontEnd/adminBase.html.twig') %}
+
+{% block title %}Rollerei Brettliebe Admin - Videos{% endblock %}
+
+{% block styles %}
+<style>
+    .sub-root{
+        width:                              100%;
+
+        display:                            flex;
+        flex-flow:                          row nowrap;
+
+    }
+    .sidebar{
+        min-width:                          50px;
+        width:                              300px;
+        max-width:                          10%;
+
+    }
+    .video-list{
+        flex-grow:                          1;
+
+        display:                            flex;
+        flex-flow:                          column nowrap;
+
+        padding-left:                       10%;
+        padding-top:                        30px;
+    }
+    .video{
+        width:                              400px;
+        min-width:                          40%;
+        max-width:                          80%;
+
+        border:                             3px solid #000;
+        border-radius:                      10px ;
+        box-shadow:                         var(--shadow-1);
+
+        display:                            flex;
+        flex-flow:                          row nowrap;
+
+        margin-right:                       20px;
+        margin-bottom:                      20px;
+    }
+    .video-label-list{
+        width:                              auto;
+        flex-grow:                          1;
+
+        display:                            flex;
+        flex-flow:                          column nowrap;
+
+    }
+    .video-label{
+        width:                              auto;
+        min-width:                          40px;
+        max-height:                         40px;
+
+        color:                              #000;
+        font-size:                          18px;
+        font-style:                         normal;
+        font-family:                        "Arial";
+        font-stretch:                       semi-expanded;
+        text-align:                         center;
+        text-decoration:                    none;
+
+        padding:                            10px 0;
+    }
+    .video-name{
+
+    }
+    .video-url{
+
+    }
+    .video-created{
+
+     }
+    .video-player-container{
+        flex-grow:                          1;
+
+    }
+    .form-container{
+        background:                         var(--base-background-text);
+
+        border:                             3px solid #000;
+        border-radius:                      10px;
+
+        position:                           fixed;
+        z-index:                            100;
+        top:                                100px;
+        left:                               100px;
+    }
+    .form-header{
+        width:                              100%;
+        flex-grow:                          1;
+
+        display:                            flex;
+        flex-flow:                          row nowrap;
+    }
+    .form-title{
+        flex-grow:                          1;
+    }
+    .form-close{
+        width:                              20px;
+        height:                             20px;
+    }
+    .create-video-form{
+
+        display:                            flex;
+        flex-flow:                          column nowrap;
+
+        padding:                            20px;
+
+    }
+    .field{
+
+        display:                            flex;
+        flex-flow:                          row nowrap;
+
+        margin-bottom:                     10px;
+    }
+    .label{
+
+    }
+    .text-input{
+
+    }
+    .button{
+        cursor:                             pointer;
+        min-width:                          50px;
+        width:                              auto;
+        min-height:                         25px;
+        height:                             auto;
+
+
+        background:                         var(--base-click-background-text);
+
+        color:                              #000;
+        font-size:                          18px;
+        font-style:                         normal;
+        font-family:                        Arial, sans-serif;
+        font-stretch:                       semi-expanded;
+        text-align:                         center;
+        text-decoration:                    none;
+        text-wrap:                          none;
+
+        padding:                            5px 10px;
+    }
+</style>
+{%  endblock %}
+
+{% block scripts %}
+<script>
+    var allVideosRoute = "{{ path("api.video.all") }}";
+    var createVideoRoute = "{{ path("api.video.create") }}";
+
+    function AdminAllVideosViewModel() {
+        var self = this;
+
+        var isNewVideoValid = function(){
+
+        };
+        // All Video List
+        self.allVideos = ko.observableArray();
+
+        self.wrapData = function (data) {
+            for(var jsonVideo of data){
+                var id = jsonVideo.id;
+                var name = jsonVideo.name;
+                var url = jsonVideo.url;
+                var created = jsonVideo.created;
+                var video = new Video(id,name,url,created);
+                self.allVideos.push(video);
+            }
+        };
+
+        //Create Form
+        self.newVideo = ko.observable(new Video());
+        self.name = ko.computed({
+            read: function(){ return self.newVideo().name(); },
+            write:function(value){ self.newVideo().name(value); }
+        });
+        self.url = ko.computed({
+            read: function(){ return self.newVideo().url(); },
+            write:function(value){ self.newVideo().url(value); }
+        });
+        self.platform= ko.computed({
+            read: function(){ return self.newVideo().platform(); },
+            write:function(value){ self.newVideo().platform(value); }
+        });
+        self.createFormVisible = ko.observable(false);
+        self.canCreateVideo = ko.computed(function(){ return isNewVideoValid(); });
+
+        self.toggleCreateVideoForm = function(){
+            var newState = !self.createFormVisible();
+            self.createFormVisible(newState);
+
+            if(newState){
+                self.newVideo(new Video());
+            }
+        };
+
+        self.createVideo = function(){
+            var name = self.newVideo().name();
+            var url = self.newVideo().url();
+            var platform = self.newVideo().platform();
+            var dto = { name: name, url: url, platform: platform};
+            console.log(name+" : "+ url+" : "+ platform);
+            HTTP.post(createVideoRoute,dto,function(response){
+                console.log("Video Created "+response);
+            });
+            self.newVideo(new Video());
+        };
+
+
+        self.init = function () {
+            HTTP.get(allVideosRoute, function(jsonData){
+                self.wrapData(jsonData);
+            });
+        };
+    }
+    function Video(id, name, url, created){
+        this.id = id;
+        this.name = ko.observable(name);
+        this.url = ko.observable(url);
+        this.created = ko.observable(created);
+        this.platform = ko.observable();
+
+
+    }
+    Video.PLATFORM = {Youtube:"Youtube",Vimeo:"Vimeo"};
+    $(document).ready(function () {
+       var viewModel = new AdminAllVideosViewModel();
+        viewModel.init();
+        ko.applyBindings(viewModel);
+    });
+</script>
+{%  endblock %}
+
+
+{% block headerContent %}
+
+{%  endblock %}
+
+{% block mainContent %}
+    <div class="sub-root">
+        <div class="video-list" data-bind="foreach : { data : $root.allVideos, as : 'video' }">
+            <div class="video">
+                <div class="video-label-list">
+                    <span class="video-name video-label" data-bind="text : video.name"></span>
+                    <span class="video-url video-label" data-bind="text : video.url"></span>
+                    <span class="video-created video-label" data-bind="text : video.created"></span>
+                    <span class="video-platform"></span>
+                </div>
+                <div class="video-player-container">
+
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="show-form button" data-bind="click: $root.toggleCreateVideoForm">Video Erstellen</div>
+        </div>
+        <div class="form-container" data-bind="visible: $root.createFormVisible">
+            <div class="form-header">
+                <span class="label form-title">Neues Video</span>
+                <span class="button form-close" data-bind="click: $root.toggleCreateVideoForm">X</span>
+            </div>
+            <form class="create-video-form">
+                <fieldset class="field">
+                    <label class="label" for="video-name">Name:</label>
+                    <input class="text-input" data-bind="textInput: $root.name" name="name" id="video-name"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label" for="video-url">Url:</label>
+                    <input class="text-input" data-bind="textInput: $root.url" name="url" id="video-url"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label" for="video-platform">Platform:</label>
+                    <input class="text-input" data-bind="textInput: $root.platform" name="platform" id="video-platform"/>
+                </fieldset>
+                <span class="create-video button" data-bind="click: $root.createVideo, enabled: $root.canCreateVideo">Erstellen</span>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footerContent %}
+
+{%  endblock %}

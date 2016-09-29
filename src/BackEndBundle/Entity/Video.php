@@ -3,6 +3,7 @@
 namespace BackEndBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Video
@@ -25,6 +26,7 @@ class Video
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotNull(message="Video Name muss gesetzt sein")
      */
     private $name;
 
@@ -32,6 +34,8 @@ class Video
      * @var string
      *
      * @ORM\Column(name="url", type="string", length=500)
+     * @Assert\NotNull(message="Video Url muss gesetzt sein"
+     * @Assert\Url(message="Video-Url muss ein richtige Url sein kappa", protocols={"http","https"})
      */
     private $url;
 
@@ -40,6 +44,7 @@ class Video
      *
      * @ORM\ManyToOne(targetEntity="BackEndBundle\Entity\Platform")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull(message="Video Platform muss gesetzt sein")
      */
     private $platform;
 
@@ -47,6 +52,7 @@ class Video
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="date")
+     * @Assert\NotNull(message="Erstelldatum des Videos muss gesetzt sein")
      */
     private $created;
 
