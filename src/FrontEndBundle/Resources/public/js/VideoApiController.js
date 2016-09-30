@@ -1,6 +1,23 @@
 /**
  * Created by Guido on 25.07.2016.
  */
+function VideoApiController(){
+
+    this.loadVideoApis = function(callback){
+
+        setTimeout(
+            function () {
+                callback();
+            },2000
+        )
+    };
+
+
+}
+
+
+
+
 var YTplayer				  , YTplayerContainer,
     YTplayerID = "ytapiplayer",	YTplayerContainerID = "ytapiplayerContainer";
 var YTplayerVars = {};

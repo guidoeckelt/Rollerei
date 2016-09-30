@@ -21,23 +21,23 @@
         flex-grow:                          1;
 
         display:                            flex;
-        flex-flow:                          column nowrap;
+        flex-flow:                          row wrap;
 
-        padding-left:                       10%;
+        padding-left:                       50px;
         padding-top:                        30px;
     }
     .video{
-        width:                              400px;
-        min-width:                          40%;
-        max-width:                          80%;
+        min-width:                          300px;
+        width:                              auto;
 
         border:                             3px solid #000;
         border-radius:                      10px ;
         box-shadow:                         var(--shadow-1);
 
         display:                            flex;
-        flex-flow:                          row nowrap;
+        flex-flow:                          column nowrap;
 
+        padding:                            10px 15px;
         margin-right:                       20px;
         margin-bottom:                      20px;
     }
@@ -57,7 +57,7 @@
         color:                              #000;
         font-size:                          18px;
         font-style:                         normal;
-        font-family:                        "Arial";
+        font-family:                        Arial, sans-serif;
         font-stretch:                       semi-expanded;
         text-align:                         center;
         text-decoration:                    none;
@@ -76,6 +76,28 @@
     .video-player-container{
         flex-grow:                          1;
 
+    }
+    .video-loader{
+        width: 100%;
+
+
+        display:                            flex;
+        flex-flow:                          row nowrap;
+        justify-content:                    center;
+        align-items:                        center;
+    }
+    .video-loader-text{
+        flex-grow:                           1;
+    }
+    .loading-animation{
+        width:                                  20px;
+        height:                                 100%;
+    }
+    .video-loader.loading{
+        background:                             var(--base-disabled-background-text);
+    }
+    .video-loader.loading .loading-animation{
+        background: red;
     }
     .form-container{
         background:                         var(--base-background-text);
@@ -126,12 +148,14 @@
     .button{
         cursor:                             pointer;
         min-width:                          50px;
-        width:                              auto;
+
         min-height:                         25px;
         height:                             auto;
 
 
         background:                         var(--base-click-background-text);
+
+        border:                             none;
 
         color:                              #000;
         font-size:                          18px;
@@ -144,10 +168,15 @@
 
         padding:                            5px 10px;
     }
+    .button:hover{
+
+        background:                         var(--base-hover-background-text);
+    }
 </style>
 {%  endblock %}
 
 {% block scripts %}
+    <script src="{{ asset('bundles/frontend/js/VideoApiController.js') }}"></script>
 <script>
     var allVideosRoute = "{{ path("api.video.all") }}";
     var createVideoRoute = "{{ path("api.video.create") }}";
@@ -160,6 +189,9 @@
         };
         // All Video List
         self.allVideos = ko.observableArray();
+
+        self.videoApisController = new VideoApiController();
+        self.videoApisReady = ko.observable(false);
 
         self.wrapData = function (data) {
             for(var jsonVideo of data){
@@ -215,6 +247,9 @@
             HTTP.get(allVideosRoute, function(jsonData){
                 self.wrapData(jsonData);
             });
+            self.videoApisController.loadVideoApis(function(){
+                self.videoApisReady(true);
+            });
         };
     }
     function Video(id, name, url, created){
@@ -223,8 +258,6 @@
         this.url = ko.observable(url);
         this.created = ko.observable(created);
         this.platform = ko.observable();
-
-
     }
     Video.PLATFORM = {Youtube:"Youtube",Vimeo:"Vimeo"};
     $(document).ready(function () {
@@ -251,12 +284,15 @@
                     <span class="video-platform"></span>
                 </div>
                 <div class="video-player-container">
-
                 </div>
+                <button class="button video-loader" data-bind="css:{loading: $root.videoApisReady()==false}">
+                    <span class="video-loader-text">Load</span>
+                    <span class="loading-animation"></span>
+                </button>
             </div>
         </div>
         <div class="sidebar">
-            <div class="show-form button" data-bind="click: $root.toggleCreateVideoForm">Video Erstellen</div>
+            <button class="show-form button" data-bind="click: $root.toggleCreateVideoForm">Video Erstellen</button>
         </div>
         <div class="form-container" data-bind="visible: $root.createFormVisible">
             <div class="form-header">

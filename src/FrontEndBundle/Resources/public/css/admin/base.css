@@ -20,7 +20,7 @@ body{
     --base-hover-background-text:       #1dd76d;
     --base-disabled-background-text:    rgba(150,150,150,1);
 
-    --base-click-background-text: #0d8534;
+    --base-click-background-text:       #0d8534;
     --base-click-blink:                 rgba(255, 229, 8, 0.8);
 
     --shadow-1:                         0px  5px 10px  3px rgba(0, 0, 0, 0.6);
@@ -85,12 +85,20 @@ body{
     color:                              #000;
     font-size:                          18px;
     font-style:                         normal;
-    font-family:                        "Arial";
+    font-family:                        Arial, sans-serif;
     font-stretch:                       semi-expanded;
     text-align:                         center;
     text-decoration:                    none;
 
+    display:                            flex;
+    flex-flow:                          column nowrap;
+    align-items:                        center;
+    justify-content:                    center;
+
     padding:                            0 10px;
+}
+.links .link .link-text{
+
 }
 .links .link:hover{
     background:                         var(--base-hover-background-text);

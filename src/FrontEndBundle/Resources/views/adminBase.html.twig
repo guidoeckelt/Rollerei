@@ -19,15 +19,19 @@
     <div class="root">
         <header class="header">
             <a class="logo-link" href="{{ path('admin.startseite') }}">
-                <img  class="logo"
-                      src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}" alt="Rollerei Logo"/>
+                <img  class="logo" alt="Rollerei Logo"
+                      src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}"/>
             </a>
             <div class="mid-box">
                 {% block headerContent %}{% endblock %}
             </div>
             <div class="links">
-                <a class="link" href="{{ path('admin.video') }}">Videos</a>
-                <a class="link" href="{{ path('admin.photo') }}">Fotos</a>
+                <a class="link" href="{{ path('admin.video') }}">
+                    <span class="link-text">Videos</span>
+                </a>
+                <a class="link" href="{{ path('admin.photo') }}">
+                    <span class="link-text">Fotos</span>
+                </a>
             </div>
         </header>
         <main class="main">

@@ -33,6 +33,8 @@ class VideoController extends Controller
     {
         $videoService = $this->get('backend.video');
         $platformService = $this->get('backend.platform');
+        $validator = $this->get("validator");
+        $serializer = $this->get('serializer');
 
         $video = new Video();
         $video->setName($request->request->get("name"));
@@ -43,17 +45,18 @@ class VideoController extends Controller
         $video->setPlatform($platform);
 
         //$videoService->validate($video);
-        $validator = $this->get("validator");
         $validationConstraints = $validator->validate($video);
 
         if($validationConstraints->count() < 1)
         {
             $videoService->create($video);
-            $response = new JsonResponse('OK');
+            $responseJson = $serializer->serialize("OK",'json');
+            $response = new JsonResponse($responseJson);
         }
         else
         {
-            $response = new JsonResponse($validationConstraints, 401);
+            $validationConstraintsJson = $serializer->serialize($validationConstraints,'json');
+            $response = new JsonResponse($validationConstraintsJson, 422);
         }
         return $response;
     }

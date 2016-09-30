@@ -34,7 +34,7 @@ class Video
      * @var string
      *
      * @ORM\Column(name="url", type="string", length=500)
-     * @Assert\NotNull(message="Video Url muss gesetzt sein"
+     * @Assert\NotNull(message="Video Url muss gesetzt sein")
      * @Assert\Url(message="Video-Url muss ein richtige Url sein kappa", protocols={"http","https"})
      */
     private $url;
