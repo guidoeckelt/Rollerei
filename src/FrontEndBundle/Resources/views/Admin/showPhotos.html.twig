@@ -3,11 +3,227 @@
 {% block title %}Rollerei Brettliebe Admin - Fotos{% endblock %}
 
 {% block styles %}
+    <link href="{{ asset('bundles/frontend/css/admin/controls.css') }}" rel="stylesheet"/>
+    <style>
+        .sub-root{
+            width:                              100%;
 
+            display:                            flex;
+            flex-flow:                          row nowrap;
+
+        }
+        .sidebar{
+            min-width:                          50px;
+            width:                              300px;
+            max-width:                          10%;
+
+        }
+        .photo-list{
+            flex-grow:                          1;
+
+            display:                            flex;
+            flex-flow:                          row wrap;
+
+            padding-left:                       50px;
+            padding-top:                        30px;
+        }
+        .photo{
+            min-width:                          300px;
+            width:                              auto;
+
+            height:                             auto;
+
+            border:                             3px solid #000;
+            border-radius:                      10px ;
+            box-shadow:                         var(--shadow-1);
+
+            display:                            flex;
+            flex-flow:                          column nowrap;
+
+            padding:                            10px 15px;
+            margin-right:                       20px;
+            margin-bottom:                      20px;
+        }
+        .photo-label-list{
+            width:                              auto;
+            flex-grow:                          1;
+
+            display:                            flex;
+            flex-flow:                          column nowrap;
+
+        }
+        .photo-label{
+            width:                              auto;
+            min-width:                          40px;
+            max-height:                         40px;
+
+            color:                              #000;
+            font-size:                          18px;
+            font-style:                         normal;
+            font-family:                        Arial, sans-serif;
+            font-stretch:                       semi-expanded;
+            text-align:                         center;
+            text-decoration:                    none;
+
+            padding:                            10px 0;
+        }
+        .photo-name{
+
+        }
+        .photo-url{
+
+        }
+        .photo-created{
+
+        }
+        .photo-image-container{
+            flex-grow:                          1;
+            width:                              auto;
+            height:                             auto;
+            max-width:                          500px;
+        }
+        .photo-image{
+            width:                              inherit;
+            height:                             inherit;
+            max-width:                          inherit;
+            max-height:                         inherit;
+            object-fit:                         contain;
+        }
+        .form-container{
+            background:                         var(--base-background-text);
+
+            border:                             3px solid #000;
+            border-radius:                      10px;
+
+            position:                           fixed;
+            z-index:                            100;
+            top:                                100px;
+            left:                               100px;
+        }
+        .form-header{
+            width:                              100%;
+            flex-grow:                          1;
+
+            display:                            flex;
+            flex-flow:                          row nowrap;
+        }
+        .form-title{
+            flex-grow:                          1;
+        }
+        .form-close{
+            width:                              20px;
+            height:                             20px;
+        }
+        .create-photo-form{
+
+            display:                            flex;
+            flex-flow:                          column nowrap;
+
+            padding:                            20px;
+
+        }
+    </style>
 {%  endblock %}
 
 {% block scripts %}
+    <script>
+        var allPhotosRoute = "{{ path("api.photo.all") }}";
+        var createPhotosRoute = "{{ path("api.photo.create") }}";
 
+        function AdminAllPhotosViewModel() {
+            var self = this;
+
+            var isNewPhotoValid = function(){
+                return false;
+            };
+            // All Video List
+            self.allPhotos = ko.observableArray();
+
+            self.loadData = function () {
+                self.allPhotos.removeAll();
+                HTTP.get(allPhotosRoute, function(data){
+                    for(var jsonVideo of data){
+                        var id = jsonVideo.id;
+                        var title = jsonVideo.title;
+                        var url = jsonVideo.url;
+                        var created = jsonVideo.created;
+                        var video = new Photo(id,title,url,created);
+                        self.allPhotos.push(video);
+                    }
+                });
+            };
+
+            //Create Form
+            self.newPhoto = ko.observable(new Photo());
+            self.title = ko.computed({
+                read: function(){ return self.newPhoto().title(); },
+                write:function(value){ self.newPhoto().title(value); }
+            });
+            self.format = ko.computed({
+                read: function(){ return self.newPhoto().format(); },
+                write:function(value){ self.newPhoto().format(value); }
+            });
+            self.created= ko.computed({
+                read: function(){ return self.newPhoto().created(); },
+                write:function(value){ self.newPhoto().created(value); }
+            });
+            self.file = ko.observable(null);
+            self.chosenFile = ko.computed(function () {
+                return self.file()!=null?self.file():'Kein Bild...';
+            });
+
+            self.isCreateFormVisible = ko.observable(false);
+            self.canCreate = ko.computed(function(){ return isNewPhotoValid(); });
+
+            self.toggleCreateForm = function(){
+                var newState = !self.isCreateFormVisible();
+                self.isCreateFormVisible(newState);
+
+                if(newState){
+                    self.newPhoto(new Photo());
+                }
+            };
+
+            self.create = function(){
+                var title = self.newPhoto().title();
+                var format = self.newPhoto().format();
+                var created = self.newPhoto().created();
+                var file = document.getElementById('photo-file').files[0];
+                var formData = new FormData();
+                formData.append("title",title);
+                formData.append("format",format);
+                formData.append("created",created);
+                formData.append("image",file,file.name);
+                HTTP.post(createPhotosRoute,formData,function(response){
+                    console.log("Photo Created "+response);
+                    self.newPhoto(new Photo());
+                    self.loadData();
+                });
+            };
+
+
+            self.init = function () {
+//            var request =  new HTTP.Request("GET",allPhotosRoute);
+//            request.sendAndWait(function(jsonData){
+//                self.wrapData(jsonData);
+//            });
+                self.loadData();
+            };
+        }
+        function Photo(id, title, url, created){
+            this.id = id;
+            this.title = ko.observable(title);
+            this.format = ko.observable();
+            this.url = ko.observable(url);
+            this.created = ko.observable(created);
+            this.event = ko.observable();
+        }
+        $(document).ready(function () {
+            var viewModel = new AdminAllPhotosViewModel();
+            viewModel.init();
+            ko.applyBindings(viewModel);
+        });
+    </script>
 {%  endblock %}
 
 
@@ -16,7 +232,51 @@
 {%  endblock %}
 
 {% block mainContent %}
-
+    <div class="sub-root">
+        <div class="photo-list" data-bind="foreach : { data : $root.allPhotos, as : 'photo' }">
+            <div class="photo">
+                <div class="photo-label-list">
+                    <span class="photo-title photo-label" data-bind="text : photo.title"></span>
+                    <span class="photo-url photo-label" data-bind="text : photo.url"></span>
+                    <span class="photo-created photo-label" data-bind="text : photo.created"></span>
+                    <span class="photo-platform"></span>
+                </div>
+                <div class="photo-image-container">
+                    <img class="photo-image" data-bind="attr:{src: photo.url, alt: photo.title}" src="#" alt="default" />
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <button class="show-form button" data-bind="click: $root.toggleCreateForm">Foto Erstellen</button>
+        </div>
+        <div class="form-container" data-bind="visible: $root.isCreateFormVisible">
+            <div class="form-header">
+                <span class="label form-title">Neues Foto</span>
+                <span class="button form-close" data-bind="click: $root.toggleCreateForm">X</span>
+            </div>
+            <form class="create-photo-form">
+                <fieldset class="field">
+                    <label class="label" for="photo-title">Titel:</label>
+                    <input class="text-input" data-bind="textInput: $root.title" type="text" id="photo-title"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label" for="photo-format">Format:</label>
+                    <input class="text-input" data-bind="textInput: $root.format" type="text" id="photo-format"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label" for="photo-created">Aufgenommen:</label>
+                    <input class="text-input" data-bind="textInput: $root.created" type="date" id="photo-created"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label">Bild:</label>
+                    <span class="file-input-text" data-bind="text: $root.chosenFile"></span>
+                    <input class="file-input" data-bind="value: $root.file" type="file" accept="image/jpeg, image/png" id="photo-file"/>
+                    <label class="file-input-button" for="photo-file">Durchsuchen...</label>
+                </fieldset>
+                <span class="create-photo button" data-bind="click: $root.create, enabled: $root.canCreate">Erstellen</span>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block footerContent %}

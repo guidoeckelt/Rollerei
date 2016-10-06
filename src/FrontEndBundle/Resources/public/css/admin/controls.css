@@ -1,0 +1,99 @@
+.field{
+
+    display:                            flex;
+    flex-flow:                          row nowrap;
+
+    margin-bottom:                     10px;
+}
+.label{
+    width:                              auto;
+    min-width:                          40px;
+    max-height:                         40px;
+
+    color:                              #000;
+    font-size:                          18px;
+    font-style:                         normal;
+    font-family:                        Arial, sans-serif;
+    font-stretch:                       semi-expanded;
+    text-align:                         center;
+    text-decoration:                    none;
+
+    padding:                            10px 0;
+}
+.text-input{
+    border:                             none;
+}
+.file-input{
+    width:                              1px;
+    height:                             1px;
+    opacity:                            0;
+    overflow:                           hidden;
+    position:                           absolute;
+    z-index:                            -1;
+}
+.file-input-text{
+    flex-grow:                          1;
+
+    background:                         #fff;
+
+    color:                              #000;
+}
+label.file-input-button{
+    cursor:                             pointer;
+    min-width:                          50px;
+
+    min-height:                         25px;
+    height:                             auto;
+
+
+    background:                         var(--base-click-background-text);
+
+    border:                             none;
+
+    color:                              #000;
+    font-size:                          18px;
+    font-style:                         normal;
+    font-family:                        Arial, sans-serif;
+    font-stretch:                       semi-expanded;
+    text-align:                         center;
+    text-decoration:                    none;
+    text-wrap:                          none;
+
+    padding:                            5px 10px;
+}
+.file-input:focus + label.file-input-button,
+.file-input + label.file-input-button:hover{
+
+    background:                         var(--base-hover-background-text);
+    outline:                            1px solid #000;
+}
+.button{
+    cursor:                             pointer;
+    min-width:                          50px;
+
+    min-height:                         25px;
+    height:                             auto;
+
+
+    background:                         var(--base-click-background-text);
+
+    border:                             none;
+
+    color:                              #000;
+    font-size:                          18px;
+    font-style:                         normal;
+    font-family:                        Arial, sans-serif;
+    font-stretch:                       semi-expanded;
+    text-align:                         center;
+    text-decoration:                    none;
+    text-wrap:                          none;
+
+    padding:                            5px 10px;
+}
+.button:hover{
+
+    background:                         var(--base-hover-background-text);
+}
+.sidebar .button{
+    width: 100%;
+}

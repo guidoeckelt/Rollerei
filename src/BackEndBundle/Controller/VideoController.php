@@ -7,11 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class VideoController extends Controller
 {
     /**
      * @Route("/video", name="api.video.all")
+     * @return JsonResponse
      */
     public function findAllVideosAction()
     {
@@ -39,7 +42,12 @@ class VideoController extends Controller
         $video = new Video();
         $video->setName($request->request->get("name"));
         $video->setUrl($request->request->get("url"));
-        $video->setCreated(new \DateTime());
+        $created = $request->request->get("created");
+        if(null == $created)
+        {
+            $created = new DateTime();
+        }
+        $video->setCreated($created);
         $platformStr = $request->request->get("platform");
         $platform = $platformService->getPlatformByName($platformStr);
         $video->setPlatform($platform);

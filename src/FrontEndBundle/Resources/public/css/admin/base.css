@@ -2,13 +2,8 @@
 *{
     padding: 				            0;
     margin: 				            0;
-    overflow:				            hidden;
+    //overflow:				            hidden;
     position:                           relative;
-}
-body{
-    margin: 				            0;
-    height:					            100%;
-    height:					            100vh;
 
     --header-color:                     #36b388;
     --header-height:                    60px;
@@ -27,6 +22,11 @@ body{
     --shadow-2:                         0px  7px 15px  7px rgba(0, 0, 0, 0.6);
     --shadow-3:                         0px  9px 15px  7px rgba(0, 0, 0, 0.6);
     --shadow-4:                         0px 11px 15px  7px rgba(0, 0, 0, 0.6);
+}
+body{
+    margin: 				            0;
+    height:					            100%;
+    height:					            100vh;
 }
 .root{
     width:					            100%;

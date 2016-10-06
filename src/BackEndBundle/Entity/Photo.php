@@ -3,6 +3,7 @@
 namespace BackEndBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Photo
@@ -24,9 +25,9 @@ class Photo
     /**
      * @var string
      *
-     * @ORM\Column(name="titel", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255)
      */
-    private $titel;
+    private $title;
 
     /**
      * @var string
@@ -34,6 +35,12 @@ class Photo
      * @ORM\Column(name="path", type="string", length=500)
      */
     private $path;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=500)
+     */
+    private $url;
 
     /**
      * @var string
@@ -58,6 +65,11 @@ class Photo
     private $event;
 
     /**
+     * @var File
+     */
+    private $image;
+
+    /**
      * Get id
      *
      * @return int
@@ -70,13 +82,13 @@ class Photo
     /**
      * Set titel
      *
-     * @param string $titel
+     * @param string $title
      *
      * @return Photo
      */
-    public function setTitel($titel)
+    public function setTitle($title)
     {
-        $this->titel = $titel;
+        $this->title = $title;
 
         return $this;
     }
@@ -86,13 +98,13 @@ class Photo
      *
      * @return string
      */
-    public function getTitel()
+    public function getTitle()
     {
-        return $this->titel;
+        return $this->title;
     }
 
     /**
-     * Set pfad
+     * Set path
      *
      * @param string $path
      *
@@ -106,13 +118,37 @@ class Photo
     }
 
     /**
-     * Get pfad
+     * Get path
      *
      * @return string
      */
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Photo
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
@@ -137,6 +173,22 @@ class Photo
     public function getFormat()
     {
         return $this->format;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param File $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
 
     /**

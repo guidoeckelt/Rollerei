@@ -3,6 +3,9 @@ services:
   backend.video:
     class:  BackEndBundle\Service\VideoService
     arguments: ["@doctrine.orm.default_entity_manager","@validator"]
+  backend.photo:
+    class:  BackEndBundle\Service\PhotoService
+    arguments: ["@doctrine.orm.default_entity_manager"]
 # BackEnd::EventService
   backend.event:
     class:  BackEndBundle\Service\EventService

@@ -3,6 +3,7 @@
 {% block title %}Rollerei Brettliebe Admin - Videos{% endblock %}
 
 {% block styles %}
+    <link href="{{ asset('bundles/frontend/css/admin/controls.css') }}" rel="stylesheet"/>
 <style>
     .sub-root{
         width:                              100%;
@@ -132,46 +133,6 @@
         padding:                            20px;
 
     }
-    .field{
-
-        display:                            flex;
-        flex-flow:                          row nowrap;
-
-        margin-bottom:                     10px;
-    }
-    .label{
-
-    }
-    .text-input{
-
-    }
-    .button{
-        cursor:                             pointer;
-        min-width:                          50px;
-
-        min-height:                         25px;
-        height:                             auto;
-
-
-        background:                         var(--base-click-background-text);
-
-        border:                             none;
-
-        color:                              #000;
-        font-size:                          18px;
-        font-style:                         normal;
-        font-family:                        Arial, sans-serif;
-        font-stretch:                       semi-expanded;
-        text-align:                         center;
-        text-decoration:                    none;
-        text-wrap:                          none;
-
-        padding:                            5px 10px;
-    }
-    .button:hover{
-
-        background:                         var(--base-hover-background-text);
-    }
 </style>
 {%  endblock %}
 
@@ -185,7 +146,7 @@
         var self = this;
 
         var isNewVideoValid = function(){
-
+            return false;
         };
         // All Video List
         self.allVideos = ko.observableArray();
@@ -244,6 +205,10 @@
 
 
         self.init = function () {
+//            var request =  new HTTP.Request("GET",allVideosRoute);
+//            request.sendAndWait(function(jsonData){
+//                self.wrapData(jsonData);
+//            });
             HTTP.get(allVideosRoute, function(jsonData){
                 self.wrapData(jsonData);
             });
