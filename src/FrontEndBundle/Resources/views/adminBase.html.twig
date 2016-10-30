@@ -37,11 +37,17 @@
                 {% block headerContent %}{% endblock %}
             </div>
             <div class="links">
-                <a class="link" href="{{ path('admin.video') }}">
+                <a class="link" href="{{ path('admin.videos') }}">
                     <span class="link-text">Videos</span>
                 </a>
-                <a class="link" href="{{ path('admin.photo') }}">
+                <a class="link" href="{{ path('admin.photos') }}">
                     <span class="link-text">Fotos</span>
+                </a>
+                <a class="link" href="{{ path('admin.events') }}">
+                    <span class="link-text">Events</span>
+                </a>
+                <a class="link" href="{{ path('admin.admins') }}">
+                    <span class="link-text">Admins</span>
                 </a>
             </div>
         </header>

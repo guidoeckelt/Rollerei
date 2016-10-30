@@ -31,50 +31,34 @@ class AdminController extends Controller
 
 
     /**
-     * @Route("/admin/video",name="admin.video")
-     * @Template()
+     * @Route("/admin/videos",name="admin.videos")
      */
     public function showVideosAction()
     {
-        return array();
+        return $this->render('FrontEndBundle:Admin:showVideos.html.twig',array());
     }
 
     /**
-     * @Route("/admin/photo",name="admin.photo")
-     * @Template()
+     * @Route("/admin/photos",name="admin.photos")
      */
     public function showPhotosAction()
     {
-        return array();
+        return $this->render('FrontEndBundle:Admin:showPhotos.html.twig',array());
     }
 
     /**
-     * @Route("/admin/video/create",name="admin.video.create")
-     * @Template()
-     *
-     * @param Request $request
-     * @return array
+     * @Route("/admin/events",name="admin.events")
      */
-    public function createVideoAction(Request $request)
+    public function showEventsAction()
     {
-        $video = new Video();
-        $formBuilder = $this->createFormBuilder($video);
-        $formBuilder->add('name');
-        $formBuilder->add('url',UrlType::class);
-        $formBuilder->add('platform');
-        $formBuilder->add('created',DateType::class);
-        $formBuilder->add('event');
-        $formBuilder->add('Erstellen',SubmitType::class);
-        $form = $formBuilder->getForm();
-        if($request->isMethod('POST'))
-        {
-            $form->handleRequest($request);
-            if($form->isValid()){
-                $videoService = $this->get('backend.video');
-                $videoService->create($video);
-            }
-        }
-        return array('form'=>$form->createView());
+        return $this->render('FrontEndBundle:Admin:showEvents.html.twig',array());
     }
 
+    /**
+     * @Route("/admin/admins",name="admin.admins")
+     */
+    public function showAdminsAction()
+    {
+        return $this->render('FrontEndBundle:Admin:showAdmins.html.twig',array());
+    }
 }
