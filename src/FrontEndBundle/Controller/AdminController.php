@@ -26,7 +26,7 @@ class AdminController extends Controller
      */
     public function startseiteAction()
     {
-        return $this->redirectToRoute('admin.video');
+        return $this->redirectToRoute('admin.videos');
     }
 
 
