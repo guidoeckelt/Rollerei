@@ -41,7 +41,7 @@ class PhotoService
      */
     public function create($photo)
     {
-        $this->generateFile($photo);
+        $this->assignFileLocationAndUrl($photo);
         $this->em->persist($photo);
         $this->em->flush();
     }
@@ -50,7 +50,7 @@ class PhotoService
      * @param Photo $photo
      * @return array
      */
-    private function generateFile($photo)
+    private function assignFileLocationAndUrl($photo)
     {
         $localPart = "D:\\XAMPP\\htdocs\\rollerei\\";
 //        $urlPart = "web/bundles/frontend/img/";

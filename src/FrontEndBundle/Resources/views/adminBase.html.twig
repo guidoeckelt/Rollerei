@@ -4,6 +4,11 @@
     <meta name="description" content="{% block description %}Rollerei Brettliebe Admin{% endblock %}">
     <title>{% block title %}Admin Base Title{% endblock %}</title>
 
+    <!-- Bootstrap v3.3.7 Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Bootstrap v3.3.7 Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
     <link rel="stylesheet" href="{{ asset('bundles/frontend/css/admin/base.css') }}" />
     {# Image Extensions#}
     <style type="text/css">
@@ -11,6 +16,12 @@
     {% block styles %}{% endblock %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <!-- Bootstrap v3.3.7 Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- AngularJS v1.5.8 Latest compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
     <script src="{{ asset('bundles/frontend/js/HTTP.js') }}"></script>
     {% block scripts %}{% endblock %}
@@ -18,7 +29,7 @@
 <body>
     <div class="root">
         <header class="header">
-            <a class="logo-link" href="{{ path('admin.startseite') }}">
+            <a class="logo-link" href="{{ path('rollerei.startseite') }}">
                 <img  class="logo" alt="Rollerei Logo"
                       src="{{ asset('bundles/frontend/img/rollereivideos/HolyBrettliebe.png') }}"/>
             </a>

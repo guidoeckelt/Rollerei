@@ -23,6 +23,8 @@
 
             display:                            flex;
             flex-flow:                          row wrap;
+            justify-content:                    flex-start;
+            align-items:                        baseline;
 
             padding-left:                       50px;
             padding-top:                        30px;
@@ -35,18 +37,19 @@
 
             border:                             3px solid #000;
             border-radius:                      10px ;
-            box-shadow:                         var(--shadow-1);
+            box-shadow:                         var(--shadow-2);
 
             display:                            flex;
             flex-flow:                          column nowrap;
 
-            padding:                            10px 15px;
+            padding:                            15px;
             margin-right:                       20px;
             margin-bottom:                      20px;
         }
         .photo-label-list{
             width:                              auto;
-            flex-grow:                          1;
+            height:                             auto;
+            /*flex-grow:                          1;*/
 
             display:                            flex;
             flex-flow:                          column nowrap;
@@ -77,10 +80,15 @@
 
         }
         .photo-image-container{
-            flex-grow:                          1;
+            /*flex-grow:                          1;*/
             width:                              auto;
             height:                             auto;
-            max-width:                          500px;
+            max-width:                          400px;
+
+            display:                            flex;
+            flex-flow:                          row nowrap;
+            justify-content:                    center;
+            align-items:                        flex-start;
         }
         .photo-image{
             width:                              inherit;
@@ -88,6 +96,8 @@
             max-width:                          inherit;
             max-height:                         inherit;
             object-fit:                         contain;
+
+            box-shadow:                        var(--shadow-1);
         }
         .form-container{
             background:                         var(--base-background-text);

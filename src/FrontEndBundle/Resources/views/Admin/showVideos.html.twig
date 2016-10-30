@@ -12,12 +12,6 @@
         flex-flow:                          row nowrap;
 
     }
-    .sidebar{
-        min-width:                          50px;
-        width:                              300px;
-        max-width:                          10%;
-
-    }
     .video-list{
         flex-grow:                          1;
 
@@ -31,16 +25,14 @@
         min-width:                          300px;
         width:                              auto;
 
-        border:                             3px solid #000;
-        border-radius:                      10px ;
-        box-shadow:                         var(--shadow-1);
-
         display:                            flex;
         flex-flow:                          column nowrap;
 
-        padding:                            10px 15px;
         margin-right:                       20px;
         margin-bottom:                      20px;
+    }
+    .panel-heading .form-group{
+        margin: 0;
     }
     .video-label-list{
         width:                              auto;
@@ -160,7 +152,7 @@
                 var name = jsonVideo.name;
                 var url = jsonVideo.url;
                 var created = jsonVideo.created;
-                var video = new Video(id,name,url,created);
+                var video = new AdminVideo(id,name,url,created);
                 self.allVideos.push(video);
             }
         };
@@ -224,6 +216,10 @@
         this.created = ko.observable(created);
         this.platform = ko.observable();
     }
+    function AdminVideo(id, name, url, created){
+        this.video = new Video(id,name,url, created);
+        this.changed = false;
+    }
     Video.PLATFORM = {Youtube:"Youtube",Vimeo:"Vimeo"};
     $(document).ready(function () {
        var viewModel = new AdminAllVideosViewModel();
@@ -240,24 +236,56 @@
 
 {% block mainContent %}
     <div class="sub-root">
-        <div class="video-list" data-bind="foreach : { data : $root.allVideos, as : 'video' }">
-            <div class="video">
-                <div class="video-label-list">
-                    <span class="video-name video-label" data-bind="text : video.name"></span>
-                    <span class="video-url video-label" data-bind="text : video.url"></span>
-                    <span class="video-created video-label" data-bind="text : video.created"></span>
-                    <span class="video-platform"></span>
-                </div>
-                <div class="video-player-container">
-                </div>
-                <button class="button video-loader" data-bind="css:{loading: $root.videoApisReady()==false}">
-                    <span class="video-loader-text">Load</span>
-                    <span class="loading-animation"></span>
-                </button>
-            </div>
+        <div class="container-fluid">
+            <button class="btn btn-default center-block show-form" data-bind="click: $root.toggleCreateVideoForm">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
         </div>
-        <div class="sidebar">
-            <button class="show-form button" data-bind="click: $root.toggleCreateVideoForm">Video Erstellen</button>
+        <div class="video-list" data-bind="foreach : { data : $root.allVideos, as : 'adminvideo' }">
+            <form class="video panel panel-default">
+                <div class="panel-heading">
+                    <fieldset class="form-group">
+                        <label class="sr-only" for="" data-bind="attr:{for:'video-name-'+adminvideo.video.id}">Name</label>
+                        <input class="video-name panel-title" data-bind="textInput : adminvideo.video.name,
+                            attr:{id:'video-name-'+adminvideo.video.id}"
+                               placeholder="Name"/>
+                    </fieldset>
+                </div>
+                <div class="panel-body">
+                    <div class="video-label-list">
+                        <fieldset class="form-group">
+                            <label for="" data-bind="attr:{for:'video-url-'+adminvideo.video.id}">URL</label>
+                            <input class="video-url" data-bind="textInput : adminvideo.video.url,
+                            attr:{id:'video-url-'+adminvideo.video.id}"
+                                   placeholder="URL"/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="" data-bind="attr:{for:'video-created-'+adminvideo.video.id}">Erstellt</label>
+                            <input class="video-created" data-bind="textInput : adminvideo.video.created,
+                            attr:{id:'video-created-'+adminvideo.video.id}"
+                                   placeholder="Erstellt"/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="" data-bind="attr:{for:'video-platform-'+adminvideo.video.id}">Platform</label>
+                            <input class="video-platform" data-bind="attr:{id:'video-platform-'+adminvideo.video.id}"
+                                   placeholder="Platform"/>
+                        </fieldset>
+                    </div>
+                    <div class="video-player-container">
+                    </div>
+                    <button class="btn-btn-default video-loader" data-bind="css:{loading: $root.videoApisReady()==false}">
+                        <span class="video-loader-text">Load</span>
+                        <span class="loading-animation"></span>
+                    </button>
+                </div>
+                <div class="panel-footer" data-bind="visible: adminvideo.changed">
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
         </div>
         <div class="form-container" data-bind="visible: $root.createFormVisible">
             <div class="form-header">
