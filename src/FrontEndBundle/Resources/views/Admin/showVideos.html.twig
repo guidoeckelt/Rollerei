@@ -131,15 +131,15 @@
 {% block scripts %}
     <script src="{{ asset('bundles/frontend/js/VideoApiController.js') }}"></script>
 <script>
-    var allVideosRoute = "{{ path("api.video.all") }}";
-    var createVideoRoute = "{{ path("api.video.create") }}";
+    var Routes = {
+        AllVideos : "{{ path("api.video.all") }}",
+        CreateVideo : "{{ path("api.video.create") }}",
+        AllPlatforms : "{{ path('api.platform.all') }}"
+    };
 
     function AdminAllVideosViewModel() {
         var self = this;
 
-        var isNewVideoValid = function(){
-            return false;
-        };
         // All Video List
         self.allVideos = ko.observableArray();
 
@@ -157,51 +157,12 @@
             }
         };
 
-        //Create Form
-        self.newVideo = ko.observable(new Video());
-        self.name = ko.computed({
-            read: function(){ return self.newVideo().name(); },
-            write:function(value){ self.newVideo().name(value); }
-        });
-        self.url = ko.computed({
-            read: function(){ return self.newVideo().url(); },
-            write:function(value){ self.newVideo().url(value); }
-        });
-        self.platform= ko.computed({
-            read: function(){ return self.newVideo().platform(); },
-            write:function(value){ self.newVideo().platform(value); }
-        });
-        self.createFormVisible = ko.observable(false);
-        self.canCreateVideo = ko.computed(function(){ return isNewVideoValid(); });
-
-        self.toggleCreateVideoForm = function(){
-            var newState = !self.createFormVisible();
-            self.createFormVisible(newState);
-
-            if(newState){
-                self.newVideo(new Video());
-            }
-        };
-
-        self.createVideo = function(){
-            var name = self.newVideo().name();
-            var url = self.newVideo().url();
-            var platform = self.newVideo().platform();
-            var dto = { name: name, url: url, platform: platform};
-            console.log(name+" : "+ url+" : "+ platform);
-            HTTP.post(createVideoRoute,dto,function(response){
-                console.log("Video Created "+response);
-            });
-            self.newVideo(new Video());
-        };
-
-
         self.init = function () {
 //            var request =  new HTTP.Request("GET",allVideosRoute);
 //            request.sendAndWait(function(jsonData){
 //                self.wrapData(jsonData);
 //            });
-            HTTP.get(allVideosRoute, function(jsonData){
+            HTTP.get(Routes.AllVideos, function(jsonData){
                 self.wrapData(jsonData);
             });
             self.videoApisController.loadVideoApis(function(){
@@ -227,6 +188,40 @@
         ko.applyBindings(viewModel);
     });
 </script>
+<script>
+    var app = angular.module("AdminAllVideos",[]);
+
+    app.controller('AllVideosEdit',['$http',function ($http) {
+        var self = this;
+
+        self.isFormVisible = false;
+        self.showForm = function(){ self.isFormVisible=true; };
+        self.closeForm = function(){ self.isFormVisible=false; };
+
+    }]);
+    app.controller('VideoForm',['$http',function ($http) {
+        var self = this;
+        self.name = "";
+        self.url = "";
+        self.created = null;
+        self.platform = null;
+
+        self.availablePlatforms = new Array();
+
+        self.create = function () {
+            var dto = { name: self.name, url: self.url, created: self.created, platform: self.platform.id};
+            console.log(dto);
+            $http.post(Routes.CreateVideo, dto).then(function(response){
+                console.log(response);
+            },function(response){ console.log(response); });
+        };
+
+        $http.get(Routes.AllPlatforms).then(function (response) {
+            self.availablePlatforms = JSON.parse(response.data);
+        },
+        function(response) { console.log(response); });
+    }]);
+</script>
 {%  endblock %}
 
 
@@ -235,9 +230,9 @@
 {%  endblock %}
 
 {% block mainContent %}
-    <div class="sub-root">
+    <div class="sub-root" ng-app="AdminAllVideos" ng-controller="AllVideosEdit as allVideos">
         <div class="container-fluid">
-            <button class="btn btn-default center-block show-form" data-bind="click: $root.toggleCreateVideoForm">
+            <button class="btn btn-default center-block show-form" ng-click="allVideos.showForm()">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
@@ -287,25 +282,32 @@
                 </div>
             </form>
         </div>
-        <div class="form-container" data-bind="visible: $root.createFormVisible">
+        <div class="form-container" ng-show="allVideos.isFormVisible" ng-controller="VideoForm as videoForm">
             <div class="form-header">
                 <span class="label form-title">Neues Video</span>
-                <span class="button form-close" data-bind="click: $root.toggleCreateVideoForm">X</span>
+                <span class="button form-close" ng-click="allVideos.closeForm()">X</span>
             </div>
             <form class="create-video-form">
                 <fieldset class="field">
                     <label class="label" for="video-name">Name:</label>
-                    <input class="text-input" data-bind="textInput: $root.name" name="name" id="video-name"/>
+                    <input class="text-input" ng-model="videoForm.name" name="name" id="video-name"/>
                 </fieldset>
                 <fieldset class="field">
                     <label class="label" for="video-url">Url:</label>
-                    <input class="text-input" data-bind="textInput: $root.url" name="url" id="video-url"/>
+                    <input class="text-input" ng-model="videoForm.url" name="url" id="video-url"/>
+                </fieldset>
+                <fieldset class="field">
+                    <label class="label" for="video-created">Erstellt:</label>
+                    <input class="text-input" ng-model="videoForm.created" name="created" id="video-created"/>
                 </fieldset>
                 <fieldset class="field">
                     <label class="label" for="video-platform">Platform:</label>
-                    <input class="text-input" data-bind="textInput: $root.platform" name="platform" id="video-platform"/>
+                    <select ng-model="videoForm.platform" ng-options="platform.name for platform in videoForm.availablePlatforms"
+                        id="video-platform">
+                        <option value="">Wähle eine Platform Aus</option>
+                    </select>
                 </fieldset>
-                <span class="create-video button" data-bind="click: $root.createVideo, enabled: $root.canCreateVideo">Erstellen</span>
+                <span class="create-video button" ng-click="videoForm.create()">Erstellen</span>
             </form>
         </div>
     </div>

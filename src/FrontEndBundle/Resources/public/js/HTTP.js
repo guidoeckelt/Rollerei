@@ -14,13 +14,6 @@ var HTTP = {
             processData: false,  // tell jQuery not to process the data
             contentType: false   // tell jQuery not to set contentType
         });
-        // $.get(route,function (rawData) {
-        //     if(rawData == null){
-        //         console.log("data null");
-        //     }
-        //     var jsonData = JSON.parse(rawData);
-        //     callback(jsonData);
-        // });
     },
     post : function (route, data, callback) {
         $.ajax({
@@ -38,13 +31,6 @@ var HTTP = {
             processData: false,  // tell jQuery not to process the data
             contentType: false   // tell jQuery not to set contentType
         });
-        // $.post(route,data,function (rawData) {
-        //     if(rawData == null){
-        //         console.log("data null");
-        //     }
-        //     var jsonData = JSON.parse(rawData);
-        //     callback(jsonData);
-        // });
     },
     Request : (function() {
 
