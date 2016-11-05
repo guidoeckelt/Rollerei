@@ -22,7 +22,7 @@ class PhotoService
     private $em;
 
     /**
-     * VideoService constructor.
+     * PhotoService constructor.
      * @param EntityManagerInterface
      */
     public function __construct($em)
@@ -55,10 +55,12 @@ class PhotoService
         $localPart = "D:\\XAMPP\\htdocs\\rollerei\\";
 //        $urlPart = "web/bundles/frontend/img/";
         $urlPart = "web/image/";
+
         $random = rand(1,9);
         $photoPart = $random."-".$photo->getTitle().".".$photo->getFormat();
         $path = $localPart.$urlPart.$photoPart;
         $url = "/rollerei/".$urlPart.$photoPart;
+
         $photo->setPath($path);
         $photo->setUrl($url);
         $photo->getImage()->move($localPart.$urlPart,$photoPart);

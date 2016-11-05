@@ -31,8 +31,16 @@ class PlatformService
     }
 
     /**
+     * @return Platform[]
+     */
+    public function findAllPlatforms()
+    {
+        return $this->em->getRepository('BackEndBundle:Platform')->findAll();
+    }
+
+    /**
      * @param $platformStr String
-     * @return array|\BackEndBundle\Entity\Platform
+     * @return Platform
      */
     public function getPlatformByName($platformStr)
     {
@@ -44,5 +52,26 @@ class PlatformService
             return new Platform();
         }
         return $platform;
+    }
+
+    /**
+     * @param int $id
+     * @return Platform | null
+     */
+    public function getPlatformById($id)
+    {
+        $platform = null;
+        try{
+            $platform =$this->em->getRepository('BackEndBundle:Platform')->findOneBy(array('id'=>$id));
+        }catch(NonUniqueResultException $nonUniqueResultException){
+            return $platform;
+        }
+        return $platform;
+    }
+
+    public function create(Platform $platform)
+    {
+        $this->em->persist($platform);
+        $this->em->flush();
     }
 }

@@ -9,6 +9,7 @@
 namespace BackEndBundle\Service;
 
 
+use BackEndBundle\Entity\Event;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EventService
@@ -20,11 +21,30 @@ class EventService
     private $em;
 
     /**
-     * VideoService constructor.
+     * EventService constructor.
      * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+    }
+
+
+    /**
+     * @return Event[]
+     */
+    public function findAllEvents()
+    {
+        return $this->em->getRepository('BackEndBundle:Event')->findAll();
+    }
+
+
+    /**
+     * @param Event $event
+     */
+    public function create(Event $event)
+    {
+        $this->em->persist($event);
+        $this->em->flush();
     }
 }

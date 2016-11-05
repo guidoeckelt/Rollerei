@@ -48,11 +48,10 @@ class VideoController extends Controller
             $created = new DateTime();
         }
         $video->setCreated($created);
-        $platformStr = $request->request->get("platform");
-        $platform = $platformService->getPlatformByName($platformStr);
+        $platformId = $request->request->get("platform");
+        $platform = $platformService->getPlatformById($platformId);
         $video->setPlatform($platform);
 
-        //$videoService->validate($video);
         $validationConstraints = $validator->validate($video);
 
         if($validationConstraints->count() < 1)

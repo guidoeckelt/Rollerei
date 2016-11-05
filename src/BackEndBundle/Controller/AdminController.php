@@ -27,8 +27,8 @@ class AdminController extends Controller
         $password = $request->request->get('password');
 
         $adminService = $this->get('backend.admin');
-        $role = $adminService->checkLoginData($name,$password);
-        switch ($role)
+        $result = $adminService->checkLoginData($name,$password);
+        switch ($result)
         {
             case 'super': $status = 200; break;
             case 'admin': $status = 200; break;
@@ -36,6 +36,6 @@ class AdminController extends Controller
             case 'fehler': $status = 422; break;
             default: $status = 200;
         }
-        return $this->json($role,$status,array(),array());
+        return $this->json($result,$status,array(),array());
     }
 }
