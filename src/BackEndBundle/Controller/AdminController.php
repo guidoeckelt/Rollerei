@@ -11,6 +11,7 @@ namespace BackEndBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
@@ -37,5 +38,19 @@ class AdminController extends Controller
             default: $status = 200;
         }
         return $this->json($result,$status,array(),array());
+    }
+    /**
+     * @Route("/admin", name="api.admin.all")
+     * @return JsonResponse
+     */
+    public function findAllAdminsAction()
+    {
+        $adminService = $this->get('backend.admin');
+        $serializer = $this->get('serializer');
+
+        $admins = $adminService->findAllVideos();
+        $jsonAdmins = $serializer->serialize($admins,'json');
+
+        return new JsonResponse($jsonAdmins);
     }
 }
