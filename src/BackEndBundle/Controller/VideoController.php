@@ -3,14 +3,12 @@
 namespace BackEndBundle\Controller;
 
 use BackEndBundle\Entity\Video;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
 
-class VideoController extends Controller
+class VideoController extends BaseController
 {
     /**
      * @Route("/video", name="api.video.all")
@@ -35,23 +33,10 @@ class VideoController extends Controller
     public function createVideoAction(Request $request)
     {
         $videoService = $this->get('backend.video');
-        $platformService = $this->get('backend.platform');
         $validator = $this->get("validator");
         $serializer = $this->get('serializer');
 
-        $video = new Video();
-        $video->setName($request->request->get("name"));
-        $video->setUrl($request->request->get("url"));
-        $created = $request->request->get("created");
-        if(null == $created)
-        {
-            $created = new DateTime();
-        }
-        $video->setCreated($created);
-        $platformId = $request->request->get("platform");
-        $platform = $platformService->getPlatformById($platformId);
-        $video->setPlatform($platform);
-
+        $video = $this->handlePostRequest($request);
         $validationConstraints = $validator->validate($video);
 
         if($validationConstraints->count() < 1)
@@ -66,5 +51,37 @@ class VideoController extends Controller
             $response = new JsonResponse($validationConstraintsJson, 422);
         }
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return Video
+     */
+    protected function handlePostRequest(Request $request)
+    {
+        $platformService = $this->get('backend.platform');
+        $eventService = $this->get('backend.event');
+
+        $video = new Video();
+
+        $video->setName($request->request->get("name"));
+        $video->setUrl($request->request->get("url"));
+        $created = $request->request->get("created");
+        if(null == $created)
+        {
+            $created = new DateTime();
+        }else{
+            $created = DateTime::createFromFormat('d.m.Y',$created);
+        }
+        $video->setCreated($created);
+        $platformId = $request->request->get("platform");
+        $platform = $platformService->findPlatformById($platformId);
+        $video->setPlatform($platform);
+
+        $eventId = $request->request->get("event");
+        $event= $eventService->findEventById($eventId);
+        $video->setEvent($event);
+
+        return $video;
     }
 }

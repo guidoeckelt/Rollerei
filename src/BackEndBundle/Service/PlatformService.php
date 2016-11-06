@@ -58,7 +58,7 @@ class PlatformService
      * @param int $id
      * @return Platform | null
      */
-    public function getPlatformById($id)
+    public function findPlatformById($id)
     {
         $platform = null;
         try{

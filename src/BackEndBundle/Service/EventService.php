@@ -38,6 +38,14 @@ class EventService
         return $this->em->getRepository('BackEndBundle:Event')->findAll();
     }
 
+    /**
+     * @param int $eventId
+     * @return Event|null
+     */
+    public function findEventById($eventId)
+    {
+        return $this->em->getRepository('BackEndBundle:Event')->findOneBy(array('id'=>$eventId));
+    }
 
     /**
      * @param Event $event
