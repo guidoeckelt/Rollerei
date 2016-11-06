@@ -9,8 +9,15 @@
         width:                              100%;
 
         display:                            flex;
-        flex-flow:                          row nowrap;
+        flex-flow:                          column nowrap;
 
+    }
+    .tool-box{
+        width: 100%;
+
+
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
     .video-list{
         flex-grow:                          1;
@@ -18,8 +25,7 @@
         display:                            flex;
         flex-flow:                          row wrap;
 
-        padding-left:                       50px;
-        padding-top:                        30px;
+        padding:                            0 0 0 50px;
     }
     .video{
         min-width:                          300px;
@@ -133,29 +139,39 @@
     <script src="{{ asset('bundles/frontend/js/VideoApiController.js') }}"></script>
 <script>
     var app = angular.module("AdminAllVideos",['Repository']);
-    app.controller('AllVideosEdit',['VideoRepo','PlatformRepo',function (Videos, Platforms) {
+    app.controller('AllVideosEdit',['VideoRepo','PlatformRepo','EventRepo',function (Videos,Platforms,Events) {
         var self = this;
 
         self.Videos = Videos;
+
         self.Platforms = Platforms;
+        self.Events = Events;
 
         self.isFormVisible = false;
         self.showForm = function(){ self.isFormVisible=true; };
         self.closeForm = function(){ self.isFormVisible=false; };
 
     }]);
-    app.controller('VideoForm',['VideoRepo','PlatformRepo',function (Videos,Platforms) {
+    app.controller('VideoForm',['VideoRepo','PlatformRepo','EventRepo',function (Videos,Platforms,Events) {
         var self = this;
         self.name = "";
         self.url = "";
         self.created = null;
+
         self.platform = null;
+        self.event = null;
 
         self.Videos = Videos;
         self.Platforms = Platforms;
+        self.Events = Events;
 
         self.create = function () {
-            var dto = { name: self.name, url: self.url, created: self.created, platform: self.platform.id};
+            var dto = { name: self.name,
+                url: self.url,
+                created: self.created,
+                platform: self.platform.id,
+                event: self.event.id
+            };
             console.log(dto);
            self.Videos.create(dto);
         };
@@ -173,8 +189,8 @@
 
 {% block mainContent %}
     <div class="sub-root" ng-app="AdminAllVideos" ng-controller="AllVideosEdit as videosCtrl">
-        <div class="container-fluid">
-            <button class="btn btn-large btn-default center-block show-form" ng-click="videosCtrl.showForm()">
+        <div class="container-fluid tool-box">
+            <button class="btn btn-lg btn-default center-block show-form" ng-click="videosCtrl.showForm()">
                 <span>New</span>
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
@@ -191,35 +207,44 @@
                 <div class="panel-body">
                     <div class="video-label-list">
                         <fieldset class="form-group">
-                            <label for="{[{ 'video-url-'+video.id }]}">URL</label>
-                            <input class="video-url" ng-model="video.url" id="{[{ 'video-url-'+video.id }]}" placeholder="URL"/>
+                            <label for="{[{ 'video-url-'+video.id }]}" class="control-label">URL</label>
+                            <input class="video-url form-control" ng-model="video.url" id="{[{ 'video-url-'+video.id }]}" placeholder="URL"/>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="{[{ 'video-created-'+video.id }]}">Erstellt</label>
-                            <input class="video-created" ng-model="video.created" id="{[{ 'video-created-'+video.id }]}"
+                            <label for="{[{ 'video-created-'+video.id }]}" class="control-label">Erstellt</label>
+                            <input class="video-created form-control" ng-model="video.created" id="{[{ 'video-created-'+video.id }]}"
                                    placeholder="Erstellt"/>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="{[{ 'video-platform-'+video.id }]}">Platform</label>
+                            <label for="{[{ 'video-platform-'+video.id }]}" class="sr-only">Platform</label>
                             <select ng-model="video.platform" id="{[{ 'video-platform-'+video.id }]}"
-                                    ng-options="platform.name for platform in videosCtrl.Platforms.all">
+                                    ng-options="platform.name for platform in videosCtrl.Platforms.all"
+                                    class="form-control">
                                 <option value="">Wähle eine Platform Aus</option>
+                            </select>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="{[{ 'video-event-'+video.id }]}" class="sr-only">Event</label>
+                            <select ng-model="video.event" id="{[{ 'video-event-'+video.id }]}"
+                                    ng-options="event.name for event in videosCtrl.Events.all"
+                                    class="form-control">
+                                <option value="">Wähle eine Event Aus</option>
                             </select>
                         </fieldset>
                     </div>
                     <div class="video-player-container">
                     </div>
-                    <button class="btn-btn-default video-loader">
+                    <button class="btn btn-primary btn-lg btn-block">
                         <span class="video-loader-text">Load</span>
                         <span class="loading-animation"></span>
                     </button>
                 </div>
                 <div class="panel-footer">
-                    <button type="button" class="btn btn-large btn-success">
+                    <button type="button" class="btn btn-lg btn-success">
                         <span>Speichern</span>
                         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
                     </button>
-                    <button type="button" class="btn btn-large btn-danger">
+                    <button type="button" class="btn btn-lg btn-danger">
                         <span>Verwerfen</span>
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
@@ -232,26 +257,37 @@
                 <span class="button form-close" ng-click="videosCtrl.closeForm()">X</span>
             </div>
             <form class="create-video-form">
-                <fieldset class="field">
-                    <label class="label" for="video-form-name">Name:</label>
-                    <input class="text-input" ng-model="videoForm.name" name="name" id="video-form-name"/>
+                <fieldset class="form-group">
+                    <label class="control-label" for="video-form-name">Name:</label>
+                    <input class="form-control" ng-model="videoForm.name" name="name" id="video-form-name"/>
                 </fieldset>
-                <fieldset class="field">
-                    <label class="label" for="video-form-url">Url:</label>
-                    <input class="text-input" ng-model="videoForm.url" name="url" id="video-form-url"/>
+                <fieldset class="form-group">
+                    <label class="control-label" for="video-form-url">Url:</label>
+                    <input class="form-control" ng-model="videoForm.url" name="url" id="video-form-url"/>
                 </fieldset>
-                <fieldset class="field">
-                    <label class="label" for="video-form-created">Erstellt:</label>
-                    <input class="text-input" ng-model="videoForm.created" name="created" id="video-form-created"/>
+                <fieldset class="form-group">
+                    <label class="control-label" for="video-form-created">Erstellt:</label>
+                    <input class="form-control" ng-model="videoForm.created" name="created" id="video-form-created"/>
                 </fieldset>
-                <fieldset class="field">
-                    <label class="label" for="video-form-platform">Platform:</label>
-                    <select ng-model="videoForm.platform" ng-options="platform.name for platform in videoForm.Platforms.all"
-                        id="video-form-platform">
+                <fieldset class="form-group">
+                    <label class="label sr-only" for="video-form-platform">Platform:</label>
+                    <select ng-model="videoForm.platform" id="video-form-platform"
+                            ng-options="platform.name for platform in videoForm.Platforms.all"
+                            class="form-control">
                         <option value="">Wähle eine Platform Aus</option>
                     </select>
                 </fieldset>
-                <span class="create-video button" ng-click="videoForm.create()">Erstellen</span>
+                <fieldset class="form-group">
+                    <label class="label sr-only" for="video-form-event">Event:</label>
+                    <select ng-model="videoForm.event" id="video-form-event"
+                            ng-options="event.name for event in videoForm.Events.all"
+                            class="form-control">
+                        <option value="">Wähle ein Event Aus</option>
+                    </select>
+                </fieldset>
+                <button class="btn btn-primary btn-lg btn-block" ng-click="videoForm.create()">
+                    Erstellen
+                </button>
             </form>
         </div>
     </div>

@@ -4,73 +4,79 @@
 var repository = angular.module('Repository',[]);
 
 repository.factory('VideoRepo',['$http',function ($http) {
-    var videos = {
-        all : null,
-        create : function(dto) {
-            $http.post(Routes.CreateVideo, dto).then(function(response){
-                console.log(response);
-            },function(response){ console.log(response); });
-        },
-        reload : function(){
-            $http.get(Routes.AllVideos).then(function (response) {
-                videos.all= JSON.parse(response.data);
-            },
-            function(response) { console.log(response); });
-        }
+    var routeList = {
+        "read" : Routes.AllVideos,
+        "create" : Routes.CreateVideo
     };
-    videos.reload();
-    return videos;
+    var videoRepo = new Repository(routeList, $http);
+
+    return videoRepo;
 }]);
 repository.factory('PhotoRepo',['$http',function ($http) {
-    var photos = {
-        all : null,
-        reload : function(){
-            $http.get(Routes.allPhotos).then(function (response) {
-                photos.all= JSON.parse(response.data);
-            },
-            function(response) { console.log(response); });
-        }
+    var routeList = {
+        "read" : Routes.AllPhotos,
+        "create" : Routes.CreatePhoto
     };
-    photos.reload();
-    return photos;
+    var photoRepo = new Repository(routeList, $http);
+
+    return photoRepo;
 }]);
 
 repository.factory('PlatformRepo',['$http',function ($http) {
-    var platforms = {
-        all : null,
-        reload : function(){
-            $http.get(Routes.AllPlatforms).then(function (response) {
-                platforms.all = JSON.parse(response.data);
-            },
-            function(response) { console.log(response); });
-        }
+    var routeList = {
+        "read" : Routes.AllPlatforms,
+        "create" : Routes.CreatePlatform
     };
-    platforms.reload();
-    return platforms;
+    var platformRepo = new Repository(routeList, $http);
+
+    return platformRepo;
 }]);
 repository.factory('EventRepo',['$http',function ($http) {
-    var events = {
-        all : null,
-        reload : function(){
-            $http.get(Routes.AllEvents).then(function (response) {
-                events.all = JSON.parse(response.data);
-            },
-            function(response) { console.log(response); });
-        }
+    var routeList = {
+        "read" : Routes.AllEvents,
+        "create" : Routes.CreateEvent
     };
-    events.reload();
-    return events;
+    var eventRepo = new Repository(routeList, $http);
+
+    return eventRepo;
 }]);
 repository.factory('AdminRepo',['$http',function ($http) {
-    var videos = {
-        all : null,
-        reload : function(){
-            $http.get(Routes.AllAdmins).then(function (response) {
-                videos.all= JSON.parse(response.data);
-            },
-            function(response) { console.log(response); });
-        }
+    var routeList = {
+        "read" : Routes.AllAdmins,
+        "create" : Routes.CreateAdmin
     };
-    videos.reload();
-    return videos;
+    var adminRepo = new Repository(routeList, $http);
+
+    return adminRepo;
 }]);
+function Repository(routeList, $http) {
+    var self = this;
+
+    var routes = routeList;
+    self.all = null;
+
+    self.create = function (dto) {
+        $http.post(routes.create, dto).then(function(response){
+                console.log(response);
+            },
+            function(response){
+                var data = JSON.parse(response.data);
+                console.log(data);
+            });
+    };
+    var load = function () {
+        $http.get(routes.read).then(function(response) {
+                self.all= JSON.parse(response.data);
+            },
+            function(response){
+                var data = JSON.parse(response.data);
+                console.log(data);
+            });
+    };
+    self.reload = function(){
+        load();
+    };
+
+    load();
+}
+// Repository.$inject = ['$http'];
