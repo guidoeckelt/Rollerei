@@ -53,30 +53,42 @@ function Repository(routeList, $http) {
     var self = this;
 
     var routes = routeList;
-    self.all = null;
+    self.all = new Array();
 
-    self.create = function (dto) {
-        $http.post(routes.create, dto).then(function(response){
-                console.log(response);
-            },
-            function(response){
-                var data = JSON.parse(response.data);
-                console.log(data);
-            });
+    var onCallback =function(callback,data,error){
+        if(callback !=null) {
+            callback(data,error);
+        }
     };
-    var load = function () {
+    var load = function (callback) {
         $http.get(routes.read).then(function(response) {
-                self.all= JSON.parse(response.data);
-            },
-            function(response){
-                var data = JSON.parse(response.data);
-                console.log(data);
-            });
+            self.all = JSON.parse(response.data);
+            onCallback(callback,self.all,null);
+        },
+        function(response){
+            var errors = JSON.parse(response.data);
+            onCallback(callback,null,errors);
+        });
+    };
+
+
+    self.read = function(callback){
+        load(callback);
+    };
+
+    self.create = function (dto, callback) {
+        $http.post(routes.create, dto).then(function(response){
+            console.log(response);
+            var data = JSON.parse(response.data);
+            onCallback(callback,data,null);
+        },
+        function(response){
+            var errors = JSON.parse(response.data);
+            onCallback(callback,null,errors);
+        });
     };
     self.reload = function(){
         load();
     };
 
-    load();
 }
-// Repository.$inject = ['$http'];
